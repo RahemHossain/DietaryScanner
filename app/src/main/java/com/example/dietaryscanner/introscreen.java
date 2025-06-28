@@ -1,4 +1,5 @@
-package com.example.dietaryscanner;
+package com.example.dietaryscanner; // Or your actual package name
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,20 +11,21 @@ public class introscreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Link this Activity to its layout file
-        setContentView(R.layout.introscreen);
+        setContentView(R.layout.introscreen); // Links to introscreen.xml
 
-        // Find the "Get Started" button by its ID
+        // 1. Find the button in introscreen.xml
+        //    Make sure your button in introscreen.xml has the ID "introbutton"
         Button introButton = findViewById(R.id.introbutton);
 
-        // Set a click listener on the button
+        // 2. Set a click listener on the button
         introButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to open the PrivacyScreen Activity
+                // 3. Create an Intent to open the privacyscreen Activity
+                //    This assumes your privacyscreen activity class is named "privacyscreen"
                 Intent intent = new Intent(introscreen.this, privacyscreen.class);
 
-                // Start the new Activity
+                // 4. Start the new Activity
                 startActivity(intent);
             }
         });

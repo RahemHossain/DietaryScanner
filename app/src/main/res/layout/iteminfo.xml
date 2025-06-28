@@ -50,7 +50,7 @@
         android:id="@+id/textView3"
         android:layout_width="362dp"
         android:layout_height="396dp"
-        android:text=" Ingrediants: Potato, Vegitable Oil"
+        android:text=" Ingrediants: Potato, Vegetable Oil"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
