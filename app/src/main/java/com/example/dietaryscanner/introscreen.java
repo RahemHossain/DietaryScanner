@@ -1,4 +1,4 @@
-package com.example.dietaryscanner; // Or your actual package name
+package com.example.dietaryscanner;
 
 import android.content.Intent;
 import android.os.Bundle;

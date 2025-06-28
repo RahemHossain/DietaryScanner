@@ -24,6 +24,15 @@
         </activity>
         <activity android:name=".privacyscreen"
             android:exported="false"> </activity>
+        <activity
+            android:name=".homescreen"
+            android:exported="false">
+            <!-- You might want to add a label for the title bar, e.g.:
+                 android:label="@string/title_home_activity" -->
+        </activity>
+
+
+
     </application>
 
 </manifest>
