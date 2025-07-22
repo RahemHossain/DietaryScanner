@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.DietaryScanner" parent="Base.Theme.DietaryScanner" />
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+<!--        <item name="colorPrimary">@color/my_light_primary</item>-->
+    </style>
 </resources>

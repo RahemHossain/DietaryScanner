@@ -15,7 +15,8 @@
 
         <activity
             android:name=".introscreen"
-            android:exported="true">
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,12 +28,21 @@
         <activity
             android:name=".homescreen"
             android:exported="false">
-            <!-- You might want to add a label for the title bar, e.g.:
-                 android:label="@string/title_home_activity" -->
         </activity>
+        <activity
+            android:name=".allergyselectionscreen"
+        android:exported="false">
+    </activity>
+
+        <activity
+            android:name=".cameraActivity"
+            android:exported="true">
+    </activity>
 
 
 
-    </application>
+
+
+</application>
 
 </manifest>

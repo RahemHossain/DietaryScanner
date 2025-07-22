@@ -22,7 +22,7 @@ public class privacyscreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 3. Create an Intent to start HomeActivity
-                Intent intent = new Intent(privacyscreen.this, homescreen.class);
+                Intent intent = new Intent(privacyscreen.this, allergyselectionscreen.class);
 
                 // 4. Start HomeActivity
                 startActivity(intent);
