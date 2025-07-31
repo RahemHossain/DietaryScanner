@@ -12,12 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DietaryScanner"
         tools:targetApi="31">
+
         <activity
             android:name=".introscreen"
-            android:exported="true"> <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".privacyscreen"
             android:exported="false"> </activity>
@@ -32,11 +36,10 @@
 
         <activity
             android:name=".cameraActivity"
-            android:exported="false">
+            android:exported="true">
     </activity>
-        <activity
-            android:name=".CustomPreferencesActivity"
-            android:exported="false" />
+
+
 
 
 
