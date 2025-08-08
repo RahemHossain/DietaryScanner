@@ -36,7 +36,7 @@
 
         <activity
             android:name=".cameraActivity"
-            android:exported="false">
+            android:exported="true">
     </activity>
 
 
