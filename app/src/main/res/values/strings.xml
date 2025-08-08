@@ -1,3 +1,4 @@
 <resources>
+    <string name="hello_blank_fragment">Hello Blank Fragment</string>
     <string name="app_name">DietaryScanner</string>
 </resources>
