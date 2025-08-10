@@ -7,8 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Switch; // IMPORTANT: Import the Switch class
+import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 public class allergyselectionscreen extends AppCompatActivity {
 
@@ -55,10 +56,10 @@ public class allergyselectionscreen extends AppCompatActivity {
     private void findViews() {
         try {
             doneButton = findViewById(R.id.done_button);
-            switchHalal = findViewById(R.id.switch_halal);
-            switchKosher = findViewById(R.id.switch_kosher);
-            switchVegan = findViewById(R.id.switch_vegan);
-            switchVegetarian = findViewById(R.id.switch_vegetarian);
+            SwitchCompat switchHalal = findViewById(R.id.switch_halal);
+            SwitchCompat switchKosher = findViewById(R.id.switch_kosher);
+            SwitchCompat switchVegan = findViewById(R.id.switch_vegan);
+            SwitchCompat switchVegetarian = findViewById(R.id.switch_vegetarian);
         } catch (NullPointerException e) {
             // This catches cases where an ID is not found.
             // Helps in debugging if a view is missing.
