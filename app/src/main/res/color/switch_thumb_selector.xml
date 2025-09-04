@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when Switch is ON (checked) -->
+    <item android:state_checked="true" android:color="#FFFFFF" /> <!-- Thumb color when ON (e.g., white) -->
+    <!-- Default state when Switch is OFF (unchecked) -->
+    <item android:color="#F0F0F0" /> <!-- Thumb color when OFF (e.g., light gray) -->
+</selector>
