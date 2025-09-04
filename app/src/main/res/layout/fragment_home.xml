@@ -223,6 +223,7 @@
             </LinearLayout>
 
             <!-- Popular Items Section -->
+            <!-- Popular Items Section -->
             <LinearLayout
                 android:id="@+id/popularItemsSection"
                 android:layout_width="match_parent"
@@ -241,48 +242,18 @@
                     android:padding="16dp"
                     android:paddingBottom="8dp" />
 
-                <!-- Popular Items Grid -->
-                <GridLayout
-                    android:id="@+id/popularItemsGrid"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/popularRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:columnCount="4"
-                    android:padding="16dp"
-                    android:paddingTop="8dp">
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
 
-                    <!-- Popular Item 1 -->
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-                        android:background="#E0E0E0" />
-
-                    <!-- Popular Item 2 -->
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-                        android:background="#E0E0E0" />
-
-                    <!-- Popular Item 3 -->
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-                        android:background="#E0E0E0" />
-
-                    <!-- Popular Item 4 -->
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-                        android:background="#E0E0E0" />
-                </GridLayout>
+                    android:padding="8dp"/>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

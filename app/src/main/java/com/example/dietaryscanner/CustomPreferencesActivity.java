@@ -16,7 +16,8 @@ import android.widget.TextView;
 import android.widget.ImageView;
 import java.util.HashSet;
 import java.util.Set;
-// No need to import Button twice: import android.widget.Button;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CustomPreferencesActivity extends AppCompatActivity {
 
@@ -24,13 +25,15 @@ public class CustomPreferencesActivity extends AppCompatActivity {
     private static final String KEY_CUSTOM_PREFERENCES = "custom_preferences";
 
     private EditText editCustomPreference;
-    private Button btnAddPreference; // Removed btnSave from this line
+    private Button btnAddPreference;
     private LinearLayout customPreferencesContainer;
     private SharedPreferences sharedPreferences;
     private Set<String> customPreferences;
 
-    // Declare btnSave once and consistently
-    private Button btnSave; // Use this variable for the "Save" button and your "Done" action
+    private Button btnSave;
+
+    // A single-thread executor to handle background tasks
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,23 +43,28 @@ public class CustomPreferencesActivity extends AppCompatActivity {
         initViews();
         loadCustomPreferences();
         displayCustomPreferences();
-        setListeners(); // This already handles btnSave's click
-        // REMOVE THIS LINE: setupDoneButton(); // This will now be handled within setListeners()
+        setListeners();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Shut down the executor service to prevent memory leaks
+        executor.shutdown();
     }
 
     private void initViews() {
         editCustomPreference = findViewById(R.id.edit_custom_preference);
         btnAddPreference = findViewById(R.id.btn_add_preference);
-        btnSave = findViewById(R.id.btn_save); // This correctly initializes the button
+        btnSave = findViewById(R.id.btn_save);
         customPreferencesContainer = findViewById(R.id.custom_preferences_container);
 
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         customPreferences = new HashSet<>();
     }
 
-
-
     private void loadCustomPreferences() {
+        // SharedPreferences.getStringSet is already safe to call on the main thread
         customPreferences = sharedPreferences.getStringSet(KEY_CUSTOM_PREFERENCES, new HashSet<>());
         if (customPreferences == null) {
             customPreferences = new HashSet<>();
@@ -65,7 +73,6 @@ public class CustomPreferencesActivity extends AppCompatActivity {
 
     private void displayCustomPreferences() {
         customPreferencesContainer.removeAllViews();
-
         for (String preference : customPreferences) {
             addPreferenceCard(preference);
         }
@@ -83,7 +90,7 @@ public class CustomPreferencesActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(v -> {
             customPreferences.remove(preferenceText);
             customPreferencesContainer.removeView(cardView);
-            saveCustomPreferences();
+            saveCustomPreferences(); // ✅ Call to save on delete
         });
 
         customPreferencesContainer.addView(cardView);
@@ -92,12 +99,10 @@ public class CustomPreferencesActivity extends AppCompatActivity {
     private void setListeners() {
         btnAddPreference.setOnClickListener(v -> {
             String preferenceText = editCustomPreference.getText().toString().trim();
-
             if (TextUtils.isEmpty(preferenceText)) {
                 Toast.makeText(this, "Please enter a preference", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             if (customPreferences.contains(preferenceText)) {
                 Toast.makeText(this, "This preference already exists", Toast.LENGTH_SHORT).show();
                 return;
@@ -106,30 +111,32 @@ public class CustomPreferencesActivity extends AppCompatActivity {
             customPreferences.add(preferenceText);
             addPreferenceCard(preferenceText);
             editCustomPreference.setText("");
-            saveCustomPreferences();
+            saveCustomPreferences(); // ✅ Call to save on add
 
             Toast.makeText(this, "Preference added", Toast.LENGTH_SHORT).show();
         });
 
-        // This is the listener for btnSave (the "Done" button you want to use)
+        // The "Save" button will save and return to the home screen
         btnSave.setOnClickListener(v -> {
-            saveCustomPreferences(); // First, save the preferences
+            saveCustomPreferences();
             Toast.makeText(this, "Custom preferences saved!", Toast.LENGTH_SHORT).show();
-
-            // Now, launch the homescreen
             Intent intent = new Intent(CustomPreferencesActivity.this, homescreen.class);
             startActivity(intent);
-            finish(); // Finish the current activity
+            finish();
         });
-
 
         // Back button
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
     }
 
+    /**
+     * Saves preferences on a background thread to prevent ANR.
+     */
     private void saveCustomPreferences() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putStringSet(KEY_CUSTOM_PREFERENCES, customPreferences);
-        editor.apply();
+        executor.execute(() -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putStringSet(KEY_CUSTOM_PREFERENCES, customPreferences);
+            editor.apply();
+        });
     }
 }
