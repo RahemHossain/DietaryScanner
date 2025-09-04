@@ -1,4 +1,21 @@
 <resources>
     <string name="hello_blank_fragment">Hello Blank Fragment</string>
     <string name="app_name">DietaryScanner</string>
+
+
+
+    <string name="permissible_to_consume">Permissible To Consume</string>
+    <string name="product_image">Product Image</string>
+    <string name="food_item">Food Item</string>
+    <string name="ingredients_loading">Ingredients: Loading...</string>
+    <string name="add_to_favorites">Add To Favorites</string>
+
+    <!-- Additional strings you might need -->
+    <string name="not_permissible">Not Permissible</string>
+    <string name="unknown_status">Unknown Status</string>
+    <string name="no_preferences_set">No Preferences Set</string>
+    <string name="remove_from_favorites">Remove From Favorites</string>
+    <string name="position_barcode">Position barcode within the frame</string>
+    <string name="scanner_will_detect">The scanner will automatically detect the barcode</string>
+    <string name="go_back">Go back</string>
 </resources>

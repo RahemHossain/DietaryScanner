@@ -1,38 +1,34 @@
-package com.example.dietaryscanner; // Or your actual package name
+package com.example.dietaryscanner;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button; // Import Button
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.SharedPreferences;
 
 public class privacyscreen extends AppCompatActivity {
+
+    private static final String PREFS_NAME = "dietary_preferences";
+    private static final String PRIVACY_KEY = "privacy_accepted";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.privacyscreen); // Links to privacyscreen.xml
+        setContentView(R.layout.privacyscreen);
 
-        // 1. Find button2 by its ID
-        //    Make sure your button in privacyscreen.xml has android:id="@+id/button2"
         Button homeButton = findViewById(R.id.button2);
 
-        // 2. Set an OnClickListener for button2
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 3. Create an Intent to start HomeActivity
-                Intent intent = new Intent(privacyscreen.this, allergyselectionscreen.class);
+        homeButton.setOnClickListener(v -> {
+            // ✅ Save acceptance so user doesn’t see this again
+            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            prefs.edit().putBoolean(PRIVACY_KEY, true).apply();
 
-                // 4. Start HomeActivity
-                startActivity(intent);
+            // ✅ Go to preference setup next
+            Intent intent = new Intent(privacyscreen.this, allergyselectionscreen.class);
+            startActivity(intent);
 
-                // 5. (Optional) Finish privacyscreen if you don't want users to return to it
-                //    by pressing the back button from HomeActivity.
-                // finish();
-            }
+            // ✅ Prevent back button from returning here
+            finish();
         });
-
-        // Any other initialization for privacyscreen can go here
     }
 }

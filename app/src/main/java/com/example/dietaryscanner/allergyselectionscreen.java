@@ -5,25 +5,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
+import androidx.cardview.widget.CardView;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class allergyselectionscreen extends AppCompatActivity {
 
     // --- SharedPreferences constants ---
-    private static final String PREFS_NAME = "MyPrefsFile";
-    private static final String PREF_HALAL_KEY = "halal_preference";
-    private static final String PREF_KOSHER_KEY = "kosher_preference";
-    private static final String PREF_VEGAN_KEY = "vegan_preference";
-    private static final String PREF_VEGETARIAN_KEY = "vegetarian_preference";
+    private static final String PREFS_NAME = "dietary_preferences";
+    private static final String PREF_SET_KEY = "selected_preferences";
 
     private SharedPreferences sharedPreferences;
 
     // --- UI component variables ---
     private Button doneButton;
+    private CardView customCard;
     private Switch switchHalal;
     private Switch switchKosher;
     private Switch switchVegan;
@@ -34,20 +35,15 @@ public class allergyselectionscreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.allergyselection);
 
-        // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        // Find the UI components from the XML layout
         findViews();
-
-        // Load the previously saved state of the switches
         loadSwitchStates();
-
-        // Set up listeners for each switch to save changes as they happen
         setupSwitchListeners();
-
-        // Set up the listener for the Done button
         setupDoneButtonListener();
+
+        // This method will now work correctly
+        setupCustomButtonListener();
     }
 
     /**
@@ -56,14 +52,26 @@ public class allergyselectionscreen extends AppCompatActivity {
     private void findViews() {
         try {
             doneButton = findViewById(R.id.done_button);
-            SwitchCompat switchHalal = findViewById(R.id.switch_halal);
-            SwitchCompat switchKosher = findViewById(R.id.switch_kosher);
-            SwitchCompat switchVegan = findViewById(R.id.switch_vegan);
-            SwitchCompat switchVegetarian = findViewById(R.id.switch_vegetarian);
+            customCard = findViewById(R.id.card_add_custom); // Find the CardView by its new ID
+            switchHalal = findViewById(R.id.switch_halal);
+            switchKosher = findViewById(R.id.switch_kosher);
+            switchVegan = findViewById(R.id.switch_vegan);
+            switchVegetarian = findViewById(R.id.switch_vegetarian);
         } catch (NullPointerException e) {
-            // This catches cases where an ID is not found.
-            // Helps in debugging if a view is missing.
             Log.e("AllergySelection", "Error finding a view by its ID: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Sets up the OnClickListener for the Custom card to launch the CustomPreferencesActivity.
+     */
+    private void setupCustomButtonListener() {
+        if (customCard != null) {
+            customCard.setOnClickListener(v -> {
+                Log.d("AllergySelection", "Custom card clicked. Launching CustomPreferencesActivity.");
+                Intent intent = new Intent(allergyselectionscreen.this, CustomPreferencesActivity.class);
+                startActivity(intent);
+            });
         }
     }
 
@@ -71,21 +79,29 @@ public class allergyselectionscreen extends AppCompatActivity {
      * Loads the saved state of the switches from SharedPreferences and sets the UI.
      */
     private void loadSwitchStates() {
+        Set<String> savedPreferences = sharedPreferences.getStringSet(PREF_SET_KEY, new HashSet<>());
+
+        Log.d("AllergySelection", "Loading saved preferences: " + savedPreferences.toString());
+
         if (switchHalal != null) {
-            boolean isHalalEnabled = sharedPreferences.getBoolean(PREF_HALAL_KEY, false);
+            boolean isHalalEnabled = savedPreferences.contains("halal");
             switchHalal.setChecked(isHalalEnabled);
+            Log.d("AllergySelection", "Halal switch set to: " + isHalalEnabled);
         }
         if (switchKosher != null) {
-            boolean isKosherEnabled = sharedPreferences.getBoolean(PREF_KOSHER_KEY, false);
+            boolean isKosherEnabled = savedPreferences.contains("kosher");
             switchKosher.setChecked(isKosherEnabled);
+            Log.d("AllergySelection", "Kosher switch set to: " + isKosherEnabled);
         }
         if (switchVegan != null) {
-            boolean isVeganEnabled = sharedPreferences.getBoolean(PREF_VEGAN_KEY, false);
+            boolean isVeganEnabled = savedPreferences.contains("vegan");
             switchVegan.setChecked(isVeganEnabled);
+            Log.d("AllergySelection", "Vegan switch set to: " + isVeganEnabled);
         }
         if (switchVegetarian != null) {
-            boolean isVegetarianEnabled = sharedPreferences.getBoolean(PREF_VEGETARIAN_KEY, false);
+            boolean isVegetarianEnabled = savedPreferences.contains("vegetarian");
             switchVegetarian.setChecked(isVegetarianEnabled);
+            Log.d("AllergySelection", "Vegetarian switch set to: " + isVegetarianEnabled);
         }
     }
 
@@ -95,44 +111,60 @@ public class allergyselectionscreen extends AppCompatActivity {
     private void setupSwitchListeners() {
         if (switchHalal != null) {
             switchHalal.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                saveBooleanPreference(PREF_HALAL_KEY, isChecked);
+                updatePreferenceSet("halal", isChecked);
             });
         }
         if (switchKosher != null) {
             switchKosher.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                saveBooleanPreference(PREF_KOSHER_KEY, isChecked);
+                updatePreferenceSet("kosher", isChecked);
             });
         }
         if (switchVegan != null) {
             switchVegan.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                saveBooleanPreference(PREF_VEGAN_KEY, isChecked);
+                updatePreferenceSet("vegan", isChecked);
             });
         }
         if (switchVegetarian != null) {
             switchVegetarian.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                saveBooleanPreference(PREF_VEGETARIAN_KEY, isChecked);
+                updatePreferenceSet("vegetarian", isChecked);
             });
         }
     }
 
     /**
-     * Helper method to save a boolean preference to SharedPreferences.
+     * Helper method to update the preference set.
      */
-    private void saveBooleanPreference(String key, boolean value) {
+    private void updatePreferenceSet(String preference, boolean isEnabled) {
+        Set<String> currentPreferences = new HashSet<>(sharedPreferences.getStringSet(PREF_SET_KEY, new HashSet<>()));
+
+        if (isEnabled) {
+            currentPreferences.add(preference);
+            Log.d("AllergySelection", "Added preference: " + preference);
+        } else {
+            currentPreferences.remove(preference);
+            Log.d("AllergySelection", "Removed preference: " + preference);
+        }
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(key, value);
-        editor.apply(); // Use apply() for asynchronous saving
+        editor.putStringSet(PREF_SET_KEY, currentPreferences);
+        editor.apply();
+
+        Log.d("AllergySelection", "Updated preferences set: " + currentPreferences.toString());
     }
 
     /**
      * Sets up the OnClickListener for the Done button.
      */
     private void setupDoneButtonListener() {
+        if (doneButton != null) {
             doneButton.setOnClickListener(v -> {
-                // When the "Done" button is clicked, the state of the switches has already
-                // been saved by the listeners. You can now proceed to the next Activity.
+                Set<String> finalPreferences = sharedPreferences.getStringSet(PREF_SET_KEY, new HashSet<>());
+                Log.d("AllergySelection", "Final saved preferences: " + finalPreferences.toString());
+
                 Intent intent = new Intent(allergyselectionscreen.this, homescreen.class);
                 startActivity(intent);
+                finish();
             });
+        }
     }
 }
